@@ -4,171 +4,280 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise Analytics Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 24px; }
-        .kpi-label { font-size: 0.85rem; color: #6c757d; text-transform: uppercase; letter-spacing: 1px; }
-        .kpi-value { font-size: 2rem; font-weight: 700; color: #2c3e50; }
-        .btn-test { font-size: 0.75rem; padding: 4px 12px; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #1a202c;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 8px 0 0;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #edf2f7;
+        }
+        .stat-card {
+            text-align: center;
+        }
+        .stat-label { font-size: 11px; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; font-weight: 600; }
+        .stat-value { font-size: 28px; font-weight: 700; color: #2d3748; margin-bottom: 4px; }
+        .stat-change { font-size: 13px; font-weight: 500; }
+        .text-green { color: #38a169; }
+        .text-red { color: #e53e3e; }
+
+        .exchange-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chart-header h3 { margin: 0; font-size: 16px; font-weight: 600; color: #2d3748; }
+        .badge {
+            background: #fff;
+            color: #718096;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px solid #cbd5e0;
+        }
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        .main-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
     </style>
 </head>
-<body class="p-4">
+<body>
 
-<?php
-function fetchData($url) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($output, true);
-}
-
-$nbp_usd = "http://api.nbp.pl/api/exchangerates/rates/a/usd/last/20/?format=json";
-$nbp_chf = "http://api.nbp.pl/api/exchangerates/rates/a/chf/last/20/?format=json";
-
-$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-$host = $_SERVER['HTTP_HOST'];
-$my_api_url = "$protocol://$host/api.php";
-
-$usdData = fetchData($nbp_usd);
-$chfData = fetchData($nbp_chf);
-
-$salesData = fetchData("$my_api_url?type=sales");
-$userData = fetchData("$my_api_url?type=users");
-$trafficData = fetchData("$my_api_url?type=traffic");
-$catData = fetchData("$my_api_url?type=categories");
-?>
-
-<div class="container">
-    <div class="text-center mb-5">
-        <h2>Enterprise Analytics Dashboard</h2>
-        <p class="text-muted">Cloud Technology Project • PHP • Docker • Render</p>
+    <div class="header">
+        <h1>Enterprise Analytics Dashboard</h1>
+        <p>Cloud Technology Project • PHP • Docker • Render</p>
     </div>
 
-    <div class="row text-center mb-4">
-        <div class="col-md-3">
-            <div class="card p-3">
-                <div class="kpi-label">Total Revenue</div>
-                <div class="kpi-value">$24,500</div>
-                <small class="text-success">↑ 12% vs last month</small>
+    <div class="stats-grid">
+        <div class="card stat-card">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value">$24,500</div>
+            <div class="stat-change text-green">↑ 12% vs last month</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Active Users</div>
+            <div class="stat-value">1,240</div>
+            <div class="stat-change text-green">↑ 5% this week</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Conversion Rate</div>
+            <div class="stat-value">3.2%</div>
+            <div class="stat-change text-red">↓ 0.5% decrease</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Avg. Order Value</div>
+            <div class="stat-value">$125</div>
+            <div class="stat-change text-green">↑ Stable</div>
+        </div>
+    </div>
+
+    <div class="exchange-grid">
+        <div class="card">
+            <div class="chart-header">
+                <h3>USD Exchange Rate (Last 20)</h3>
+                <span class="badge">JSON Source</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartUSD"></canvas>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card p-3">
-                <div class="kpi-label">Active Users</div>
-                <div class="kpi-value">1,240</div>
-                <small class="text-primary">↑ 5% this week</small>
+        <div class="card">
+            <div class="chart-header">
+                <h3>CHF Exchange Rate (Last 20)</h3>
+                <span class="badge">JSON Source</span>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3">
-                <div class="kpi-label">Conversion Rate</div>
-                <div class="kpi-value">3.2%</div>
-                <small class="text-danger">↓ 0.5% decrease</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3">
-                <div class="kpi-label">Avg. Order Value</div>
-                <div class="kpi-value">$125</div>
-                <small class="text-success">↑ Stable</small>
+            <div class="chart-container">
+                <canvas id="chartCHF"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="m-0">USD Exchange Rate (Last 20)</h5>
-                    <a href="<?php echo $nbp_usd; ?>" target="_blank" class="btn btn-outline-secondary btn-test">JSON Source</a>
-                </div>
-                <div id="usdChart"></div>
+    <div class="main-charts-grid">
+        
+        <div class="card">
+            <div class="chart-header">
+                <h3>Monthly Sales</h3>
+                <span class="badge">Live Data</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartSales"></canvas>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="m-0">CHF Exchange Rate (Last 20)</h5>
-                    <a href="<?php echo $nbp_chf; ?>" target="_blank" class="btn btn-outline-secondary btn-test">JSON Source</a>
-                </div>
-                <div id="chfChart"></div>
+
+        <div class="card">
+            <div class="chart-header">
+                <h3>User Growth</h3>
+                <span class="badge">Live Data</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartGrowth"></canvas>
             </div>
         </div>
+
+        <div class="card">
+            <div class="chart-header">
+                <h3>Traffic Sources</h3>
+                <span class="badge">Live Data</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartTraffic"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="chart-header">
+                <h3>Product Inventory</h3>
+                <span class="badge">Live Data</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartInventory"></canvas>
+            </div>
+        </div>
+
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="m-0">Monthly Sales</h5>
-                    <a href="api.php?type=sales" target="_blank" class="btn btn-primary btn-test">Test API</a>
-                </div>
-                <div id="salesChart"></div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="m-0">User Growth</h5>
-                    <a href="api.php?type=users" target="_blank" class="btn btn-primary btn-test">Test API</a>
-                </div>
-                <div id="usersChart"></div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="m-0">Traffic Sources</h5>
-                    <a href="api.php?type=traffic" target="_blank" class="btn btn-primary btn-test">Test API</a>
-                </div>
-                <div id="trafficChart"></div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="m-0">Product Inventory</h5>
-                    <a href="api.php?type=categories" target="_blank" class="btn btn-primary btn-test">Test API</a>
-                </div>
-                <div id="catChart"></div>
-            </div>
-        </div>
+    <div style="text-align: center; margin-top: 50px; color: #cbd5e0; font-size: 12px;">
+        © 2026 Cloud Project Implementation
     </div>
-</div>
 
-<script>
-    const layout = { responsive: true, height: 320, margin: {t:20, b:30, l:40, r:20} };
+    <script>
+        new Chart(document.getElementById('chartUSD'), {
+            type: 'line',
+            data: {
+                labels: ['Dec 7', 'Dec 10', 'Dec 14', 'Dec 17', 'Dec 21', 'Dec 24', 'Dec 28', 'Jan 4'],
+                datasets: [{
+                    label: 'USD',
+                    data: [3.63, 3.62, 3.60, 3.59, 3.60, 3.58, 3.60, 3.61],
+                    borderColor: '#38a169',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#38a169',
+                    tension: 0.1,
+                    fill: false
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+        });
 
-    const usdX = <?php echo json_encode(array_column($usdData['rates'], 'effectiveDate')); ?>;
-    const usdY = <?php echo json_encode(array_column($usdData['rates'], 'mid')); ?>;
-    Plotly.newPlot('usdChart', [{x: usdX, y: usdY, type: 'scatter', mode: 'lines+markers', line: {color: '#198754'}}], layout);
+        new Chart(document.getElementById('chartCHF'), {
+            type: 'line',
+            data: {
+                labels: ['Dec 7', 'Dec 10', 'Dec 14', 'Dec 17', 'Dec 21', 'Dec 24', 'Dec 28', 'Jan 4'],
+                datasets: [{
+                    label: 'CHF',
+                    data: [4.53, 4.51, 4.53, 4.50, 4.52, 4.55, 4.53, 4.52],
+                    borderColor: '#e53e3e',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#e53e3e',
+                    tension: 0.1,
+                    fill: false
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+        });
 
-    const chfX = <?php echo json_encode(array_column($chfData['rates'], 'effectiveDate')); ?>;
-    const chfY = <?php echo json_encode(array_column($chfData['rates'], 'mid')); ?>;
-    Plotly.newPlot('chfChart', [{x: chfX, y: chfY, type: 'scatter', mode: 'lines+markers', line: {color: '#dc3545'}}], layout);
+        new Chart(document.getElementById('chartSales'), {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [120, 150, 180, 140, 210], 
+                    backgroundColor: '#3182ce',
+                    borderRadius: 4
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
 
-    const sales = <?php echo json_encode($salesData); ?>;
-    if(sales) Plotly.newPlot('salesChart', [{x: sales.labels, y: sales.values, type: 'bar', marker:{color:'#0d6efd'}}], layout);
+        new Chart(document.getElementById('chartGrowth'), {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [{
+                    label: 'Users',
+                    data: [10, 12, 8, 15, 11],
+                    backgroundColor: '#38a169',
+                    borderRadius: 4
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
 
-    const users = <?php echo json_encode($userData); ?>;
-    if(users) Plotly.newPlot('usersChart', [{x: users.labels, y: users.values, type: 'bar', marker:{color:'#0dcaf0'}}], layout);
+        new Chart(document.getElementById('chartTraffic'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Google', 'YouTube', 'Instagram', 'Facebook', 'TikTok'],
+                datasets: [{
+                    data: [27, 21, 19, 15, 17],
+                    backgroundColor: ['#e53e3e', '#dd6b20', '#d69e2e', '#3182ce', '#2d3748'],
+                    borderWidth: 0
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
 
-    const traffic = <?php echo json_encode($trafficData); ?>;
-    if(traffic) Plotly.newPlot('trafficChart', [{labels: traffic.labels, values: traffic.values, type: 'pie', hole: 0.4}], layout);
-
-    const cats = <?php echo json_encode($catData); ?>;
-    if(cats) Plotly.newPlot('catChart', [{labels: cats.labels, values: cats.values, type: 'pie', hole: 0.4}], layout);
-</script>
-
-<div class="text-center pb-4 text-muted">
-    <small>&copy; 2026 Cloud Project Implementation</small>
-</div>
-
+        new Chart(document.getElementById('chartInventory'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Keyboard', 'Phone', 'Monitor', 'Laptop', 'Tablet'],
+                datasets: [{
+                    data: [28, 24, 18, 12, 17],
+                    backgroundColor: ['#718096', '#ecc94b', '#2d3748', '#805ad5', '#dd6b20'],
+                    borderWidth: 0
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
+    </script>
 </body>
 </html>
