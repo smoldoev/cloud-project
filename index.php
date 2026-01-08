@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* --- ТЕМНАЯ ТЕМА (DARK MODE) --- */
+        
         :root {
             --bg-body: #0f172a;       
             --bg-card: #1e293b;       
@@ -28,7 +28,7 @@
             padding: 40px;
         }
 
-        /* Заголовок */
+        
         .header {
             text-align: center;
             margin-bottom: 50px;
@@ -40,7 +40,7 @@
             background: linear-gradient(90deg, var(--accent-main), var(--accent-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent; 
-            letter-spacing: 2px; /* Чуть шире буквы для стиля */
+            letter-spacing: 2px; 
             text-transform: uppercase;
         }
         .header p {
@@ -51,7 +51,7 @@
             letter-spacing: 1px;
         }
 
-        /* Статистика сверху */
+        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -90,7 +90,7 @@
         .text-green { color: var(--accent-green); }
         .text-red { color: #ef4444; }
 
-        /* Графики */
+        
         .exchange-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -239,12 +239,12 @@
     </div>
 
     <script>
-        // Настройки для графиков
+        
         Chart.defaults.color = '#94a3b8';
         Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
         Chart.defaults.font.family = "'Poppins', sans-serif";
 
-        // USD
+        
         new Chart(document.getElementById('chartUSD'), {
             type: 'line',
             data: {
@@ -264,7 +264,7 @@
             options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
         });
 
-        // CHF
+        
         new Chart(document.getElementById('chartCHF'), {
             type: 'line',
             data: {
@@ -284,7 +284,7 @@
             options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
         });
 
-        // Sales (Blue)
+        
         new Chart(document.getElementById('chartSales'), {
             type: 'bar',
             data: {
@@ -300,7 +300,7 @@
             options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
 
-        // Growth (Purple)
+        
         new Chart(document.getElementById('chartGrowth'), {
             type: 'bar',
             data: {
@@ -316,7 +316,7 @@
             options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
 
-        // Traffic (Pie)
+        
         new Chart(document.getElementById('chartTraffic'), {
             type: 'doughnut',
             data: {
@@ -331,7 +331,7 @@
             options: { maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8 } } } }
         });
 
-        // Inventory (Pie)
+        
         new Chart(document.getElementById('chartInventory'), {
             type: 'doughnut',
             data: {
@@ -348,3 +348,4 @@
     </script>
 </body>
 </html>
+
